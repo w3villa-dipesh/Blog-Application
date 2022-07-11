@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+<p>
+  <strong>Title:</strong>
+  <%= @blog.title %>
+</p>
+<p>
+  <strong>Created By:</strong>
+  <%= @blog.user_id %>
+  <%= @blog.user.email %>
+</p>
+<p>
+  <strong>Created At:</strong>
+  <%= @blog.created_at%>
+</p>
+<p>
+  <strong>Body:</strong>
+  <%= @blog.body %>
+</p>
+<p>
+  <strong>Category:</strong>
+  <%= @blog.category.present? ? @blog.category.name : "No Category Till now."%>
+</p>
+<p>
+<strong>Images:<strong>
+<% if @blog.images.attached? %>
+  <% @blog.images.each do |image|%>
+    <%= image_tag image,width:"200px"%>
+  <% end %>
+<% end %>
+</p>
+
+
+<%= link_to 'Edit', edit_blog_path(@blog) %> |
+<%= link_to 'Back', blogs_path %>

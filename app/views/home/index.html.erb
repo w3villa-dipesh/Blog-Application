@@ -1,0 +1,52 @@
+<style>
+.conat{
+    display: flex;
+    padding: 0.5em;
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+</style>
+
+<h1>Hello World</h1>
+<p>Learning Rails</p>
+<p>This is a Web app containing Various Associations as mentioned Below.</p>
+<br/>
+<div class="conat">
+    <div class="card">
+        <div class="card-header">
+            <h4> has_many, belongs_to </h4>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Between User and Article</h5>
+            <p class="card-text">User has_many :articles </p>
+            <p class="card-text">Article belongs_to :user </p>
+        </div>
+    </div>
+    <br/>
+    <div class="card">
+        <div class="card-header">
+            <h4> has_and_belongs_to_many </h4>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Between User and Course</h5>
+            <p class="card-text">User has_and_belongs_to_many :courses </p>
+            <p class="card-text">Course has_and_belongs_to_many :users </p>
+        </div>
+    </div>
+    <br/>
+    <div class="card">
+        <div class="card-header">
+            <h4> has_many, through</h4>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Between User and Project through User_Project</h5>
+            <p class="card-text">User has_many :user_projects  </p>
+            <p class="card-text">User has_many :projects, through: :user_projects </p>
+            <p class="card-text">Project has_many :user_projects </p>
+            <p class="card-text">Project has_many :users, through: :user_projects </p>
+        </div>
+    </div>
+    <br/>
+
+</div>
