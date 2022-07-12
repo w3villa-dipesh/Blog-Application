@@ -5,6 +5,7 @@ class BlogsController < ApplicationController
   def index
     @blogs = Blog.all
     @categories = Category.all
+    @tags = Tag.all
   end
 
   # GET /blogs/1 or /blogs/1.json
@@ -13,9 +14,18 @@ class BlogsController < ApplicationController
 
   def show_category
     @categories = Category.all
+    @tags = Tag.all
     # @category = Category.where(id: params[:category_id]).first
     @category = Category.find(params[:category_id]) 
     @blogs = @category.blogs
+  end
+
+  def show_tag
+    @categories = Category.all
+    @tags = Tag.all
+    # @tag = Tag.where(id: params[:tag_id]).first
+    @tag = Tag.find(params[:tag_id]) 
+    @blogs = @tag.blogs
   end
 
   # GET /blogs/new

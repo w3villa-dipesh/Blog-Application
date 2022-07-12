@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Demo1</title>
+    <title>Blog Application</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -40,10 +40,10 @@
   <body>
     <%= render "layouts/header"%>
     <div class = "container mt-5"> 
-    <br>
-    <% if notice %>
-      <%= render "layouts/alerts"%>
-    <% end %>
+      <br>
+      <% if notice || alert%>
+        <%= render "layouts/alerts"%>
+      <% end %>
       <%= yield %>
     </div>
     <%= render "layouts/footer"%>

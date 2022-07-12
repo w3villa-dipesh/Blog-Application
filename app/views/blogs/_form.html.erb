@@ -1,72 +1,77 @@
-<%= form_for blog do |form| %>
-  <% if blog.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(blog.errors.count, "error") %> prohibited this blog from being saved:</h2>
+<div class="d-flex flex-column align-items-center">
+  <div class="card">
+    <div class="card-body">
+    <%= form_for blog do |form| %>
+      <% if blog.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(blog.errors.count, "error") %> prohibited this blog from being saved:</h2>
 
-      <ul>
-        <% blog.errors.each do |error| %>
-          <li><%= error.full_message %></li>
+          <ul>
+            <% blog.errors.each do |error| %>
+              <li><%= error.full_message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="field form-group">
+        <%= form.label :title %>
+        <%= form.text_field :title ,class:"form-control"%>
+      </div>
+
+      <div class="field form-group">
+        <%= form.label :body %>
+        <%= form.text_area :body ,class:"form-control"%>
+      </div>
+
+      <div class="field form-group">
+        <%= form.label :category %>
+        <%= form.collection_select(:category_id, Category.all ,:id,:name,prompt: true) %>
+        <%#= form.select :category_id, Category.all.map {|c| [c.name,c.id]} ,prompt: true%>
+      </div>
+
+      <div class="field form-group">
+        <%= form.label :images %>
+        <%= form.file_field :images , multiple: true %>
+      </div>
+
+      <div class="field form-group">
+        <%= form.label :tags %>
+        <%#= form.collection_check_boxes :tag_ids , Tag.all, :id , :name%>
+        <%= form.collection_check_boxes(:tag_ids, Tag.all, :id, :name) do |tag| %>
+          <div class="form-check">
+            <%= tag.check_box(class: "form-check-input") %>
+            <%= tag.label(class: "form-check-label") %>
+              <%= form.fields_for :tag do |t| %>
+                <%= t.text_field :name, :value=>tag.object.name%>
+              <% end %>
+          </div>
         <% end %>
-      </ul>
-    </div>
-  <% end %>
+        <br/>
+        <div>
+          <input type="button" id="btn" class="btn btn-outline-primary" value="Create a New Tag">
+        </div>
 
-  <div class="field">
-    <%= form.label :title %>
-    <%= form.text_field :title %>
-  </div>
+        <div id="Create" style="display:none">
+          <h4>or Create a Tag:</h4>
+          <%= form.fields_for :tags, blog.tags.build do |t|%>
+            <%= t.label :name %>
+            <%= t.text_field :name %>
+          <%end%>
+        </div>
 
-  <div class="field">
-    <%= form.label :body %>
-    <%= form.text_area :body %>
-  </div>
+      </div>
 
-  <div class="field form-group">
-    <%= form.label :category %>
-    <%= form.collection_select(:category_id, Category.all ,:id,:name,prompt: true) %>
-    <%#= form.select :category_id, Category.all.map {|c| [c.name,c.id]} ,prompt: true%>
-  </div>
-
-  <div class="field">
-    <%= form.label :images %>
-    <%= form.file_field :images , multiple: true %>
-  </div>
-
-  <div class="field">
-    <% current_user.id%>
-  </div>
-
-  <div class="field">
-    <%= form.label :tags %>
-    <%#= form.collection_check_boxes :tag_ids , Tag.all, :id , :name%>
-    <%= form.collection_check_boxes(:tag_ids, Tag.all, :id, :name) do |tag| %>
-      <div class="form-check">
-        <%= tag.check_box(class: "form-check-input") %>
-        <%= tag.label(class: "form-check-label") %>
-          <%= form.fields_for :tag do |t| %>
-            <%= t.text_field :name, :value=>tag.object.name%>
-          <% end %>
+      <div class="actions">
+        <%= form.submit class:"btn btn-outline-success"%>
       </div>
     <% end %>
-
-    <div>
-      <input type="button" id="btn" class="btn btn-outline-primary" value="Create a Tag">
     </div>
-
-    <div id="Create" style="display:none">
-      <h4>or Create a Tag:</h4>
-      <%= form.fields_for :tags, blog.tags.build do |t|%>
-        <%= t.label :name %>
-        <%= t.text_field :name %>
-      <%end%>
-    </div>
-
+    <%= link_to 'Back', blogs_path ,class:"btn btn-secondary h-25"%>
   </div>
+</div>
 
-  <div class="actions">
-    <%= form.submit %>
-  </div>
-<% end %>
+
 
 <script type="text/javascript">
   $(document).ready(function () {
