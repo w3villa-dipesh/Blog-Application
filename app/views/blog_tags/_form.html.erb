@@ -1,0 +1,27 @@
+<%= form_with(model: blog_tag) do |form| %>
+  <% if blog_tag.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(blog_tag.errors.count, "error") %> prohibited this blog_tag from being saved:</h2>
+
+      <ul>
+        <% blog_tag.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :blog_id %>
+    <%= form.number_field :blog_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :tag_id %>
+    <%= form.number_field :tag_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

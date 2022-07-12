@@ -13,7 +13,8 @@ class BlogsController < ApplicationController
 
   def show_category
     @categories = Category.all
-    @category = Category.where(id: params[:category_id]).first
+    # @category = Category.where(id: params[:category_id]).first
+    @category = Category.find(params[:category_id]) 
     @blogs = @category.blogs
   end
 
@@ -76,6 +77,6 @@ class BlogsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def blog_params
-      params.require(:blog).permit(:title, :body, :category_id,images: [])
+      params.require(:blog).permit(:title, :body, :category_id,images: [],tags_attributes: [:id,:name], tag_ids: [])
     end
 end
