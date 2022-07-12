@@ -27,21 +27,14 @@
   .blog-card-body {
     width: 500px !important;
   }
-  .option-card {
-    width: 250px;
-    position: fixed;
-    top: 80px;
-  }
-  .add-blog-btn{
-    position: fixed;
-    top: 320px;
-    left: 100px;
+  .tag-card {
+  width: 250px !important;
   }
 </style>
 <div class="contain">
   <div class = "recent_post">
     <div class="col-md-12">
-      <div class="option-card">
+      <div class="card w-50 p-3">
         <div class="card-header">
           <h4>Recent Post</span></h4>
         </div>
@@ -54,13 +47,6 @@
               </li>
           </ul>
         </div>
-      </div>
-      <div class="add-blog-btn">
-        <% if @categories.present? %>
-          <%= link_to 'Write a Blog', new_blog_path, class: 'btn btn-secondary new-blog' %>
-        <% else %>
-          <h4 class="card" style="text-align:center;">For Writing a new blog post pls login first..</h4>
-        <% end %>
       </div>
     </div>
   </div>
@@ -76,6 +62,7 @@
         <%# <img class="card-img-top" src="..." alt="Card image cap"> %>
         <div class="card-body blog-card-body">
           <h5 class="card-title"><%= blog.title %></h5>
+          <p class="card-text"><small>Created by : <%= blog.user.email %>  at : <%= time_ago_in_words(blog.created_at, include_seconds: true) %></small></p>
           <p class="card-text"><%= blog.body %></p>
           <p class="lead"><%= link_to 'Read More..', blog, class: "btn btn-primary read-btn"%></p>
           <% if user_signed_in? && blog.user_id == current_user.id %>
@@ -105,19 +92,15 @@
       </div>
     </div>
     <%# Tags %>
-    <div class="card w-50 p-3">
+    <div class="card w-50 p-3 tag-card">
       <div class="card-header">
         <h4>Tags</span></h4>
       </div>
       <div class="card-body">
-        <ul class="list-group">
           <% @tags.each do |tag|%>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              <%= link_to tag.name, show_blogs_tag_path(:tag_id => tag.id), class:'cat-link'%>
-              <span class="badge g-primary rounded-pill" ><%= tag.blogs.count%></span>
-            </li>
+              <%= link_to tag.name, show_blogs_tag_path(:tag_id => tag.id), class:"badge badge-secondary"%>
+              <%# <span class="badge g-primary rounded-pill" >= tag.blogs.count</span> %>
           <%end%>
-        </ul>
       </div>
     </div>
   </div>

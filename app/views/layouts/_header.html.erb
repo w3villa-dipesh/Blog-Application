@@ -56,20 +56,15 @@
         <%= link_to "Blogs", blogs_path, class:"nav-link"%>
         </li>      
         <li class = "nav-item">
+          <%= link_to 'Write a Blog', new_blog_path, class: 'nav-link' %>
+        </li>
+        <li class = "nav-item">
         <%= link_to "Categories", categories_path, class:"nav-link"%>
         </li>      
         <li class = "nav-item">
         <%= link_to "Tags", tags_path, class:"nav-link"%>
         </li>       
-        <li class = "nav-item">
-        <%#= link_to "Courses", courses_path, class:"nav-link"%>
-        </li>        
-        <li class = "nav-item">
-        <%#= link_to "Projects", projects_path, class:"nav-link"%>
-        </li>       
-        <li class = "nav-item">
-        <%#= link_to "First Page", fi_path, class:"nav-link"%>
-        </li> 
+
       </ul> 
         <div class="dropdown">
           <button onclick="myFunction()" class="dropbtn"><%= current_user.email%> | <i class="fa-solid fa-angle-down"></i></button>
