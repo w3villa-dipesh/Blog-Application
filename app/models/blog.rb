@@ -13,6 +13,9 @@ class Blog < ApplicationRecord
     has_many :blog_tags
     has_many :tags, through: :blog_tags
 
+    has_many :likes
+    has_many :comments
+
     def correct_image_type
         if images.attached? == false
             errors.add(:images, "are missing")

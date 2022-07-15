@@ -3,7 +3,10 @@ class BlogsController < ApplicationController
 
   # GET /blogs or /blogs.json
   def index
-    @blogs = Blog.all
+    @q = Blog.ransack(params[:q])
+    @blogs = @q.result(distinct: true)
+
+    # @blogs = Blog.all
     @categories = Category.all
     @tags = Tag.all
   end
@@ -17,7 +20,8 @@ class BlogsController < ApplicationController
     @tags = Tag.all
     # @category = Category.where(id: params[:category_id]).first
     @category = Category.find(params[:category_id]) 
-    @blogs = @category.blogs
+    @q = @category.blogs.ransack(params[:q])
+    @blogs = @q.result(distinct: true)
   end
 
   def show_tag
@@ -25,7 +29,8 @@ class BlogsController < ApplicationController
     @tags = Tag.all
     # @tag = Tag.where(id: params[:tag_id]).first
     @tag = Tag.find(params[:tag_id]) 
-    @blogs = @tag.blogs
+    @q = @tag.blogs.ransack(params[:q])
+    @blogs = @q.result(distinct: true)
   end
 
   # GET /blogs/new

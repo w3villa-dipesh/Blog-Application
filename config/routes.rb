@@ -2,7 +2,10 @@ Rails.application.routes.draw do
   resources :blog_tags
   resources :tags
   resources :categories
-  resources :blogs
+  resources :likes, only: [:create, :destroy]
+  resources :blogs do
+    resources :comments, only: [:create]
+  end
   devise_for :users
   get 'blogs/categories/:category_id', to: 'blogs#show_category', as: :show_blogs_category
   get 'blogs/tags/:tag_id', to: 'blogs#show_tag', as: :show_blogs_tag

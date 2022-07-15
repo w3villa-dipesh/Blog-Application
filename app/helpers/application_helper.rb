@@ -11,4 +11,8 @@ module ApplicationHelper
     def find_date(d)
         d.strftime("%d %b, %y") 
     end
+
+    def format_category(c,a)
+        "#{c}  (#{a})"
+    end
 end

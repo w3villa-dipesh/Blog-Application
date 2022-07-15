@@ -18,19 +18,52 @@
     <%= @blog.category.present? ? @blog.category.name : "No Category Till now."%>
   </p>
     <br>
+  <p>
+    <strong>Tags:</strong>
+    <% @blog.tags.each do |t| %>
+      <%= link_to t.name, show_blogs_tag_path(:tag_id => t.id), class:"badge badge-secondary"%>
+    <% end %>
+  </p>
+  <br>
+  <div>
+    <input type="button" id="btn" class="btn btn-outline-primary" value="<%=@blog.likes.count%> Likes">
+  </div>
+
+  <div id="Create" style="display:none">
+    <% @blog.likes.each do |l| %>
+      <p><%= l.user.email %> </p>
+    <% end %>
+  </div>
+  <%# like = current_user.likes.find_by(blog: @blog) %>
+  <%# if like.nil? %>
+    <%#= button_to "Like",likes_path,params:{like:{blog_id: @blog.id}},method: :post%>
+  <%# else %>
+    <%#= button_to "Unlike",like_path(like),method: :delete %>
+  <%# end %>
+  <br>
   <p class="lead"><%= @blog.body%></p>
   <br>
 
   <p class="lead">
-  <% if @blog.images.attached? %>
-    <% @blog.images.each do |image| %>
-      <%= image_tag thumbnail(image)%>
-    <% end %>
-  <% else %> 
-    <%= "No Images Attached"%>
-  <%end%>
-
+    <% if @blog.images.attached? %>
+      <% @blog.images.each do |image| %>
+        <%= image_tag thumbnail(image)%>
+      <% end %>
+    <% else %> 
+      <%= "No Images Attached"%>
+    <%end%>
   </p>
+
+
+  <p>
+    <strong>Comments:</strong>
+    <%#= render @blog.comments %>
+    <%= render @blog.comments.where(parent_id: nil).includes(:user).order(id: :desc) %>
+    <%= render partial: 'comments/form', locals: {blog: @blog,parent: nil} %>
+  </p>
+
+
+
   <%= link_to "Back", :back,:class => "text-light btn btn-secondary"%>  
   <% if @blog.user_id == current_user.id %>
   <%= link_to "Edit Blog", edit_blog_path(@blog),:class => "text-light btn btn-secondary"%>  
@@ -38,3 +71,10 @@
   <% end %>
 </div>
 
+<script type="text/javascript">
+  $(document).ready(function () {
+      $("#btn").click(function () {
+          $("#Create").toggle();
+      });
+  });
+</script>
