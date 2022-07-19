@@ -42,8 +42,8 @@
           <div class="form-check">
             <%= tag.check_box(class: "form-check-input") %>
             <%= tag.label(class: "form-check-label") %>
-              <%= form.fields_for :tag do |t| %>
-                <%= t.text_field :name, :value=>tag.object.name%>
+              <%= form.fields_for :tag ,blog.tags.build do |t| %>
+                <%= t.text_field :name, :value=>tag.object.name %>
               <% end %>
           </div>
         <% end %>

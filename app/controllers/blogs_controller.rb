@@ -4,7 +4,7 @@ class BlogsController < ApplicationController
   # GET /blogs or /blogs.json
   def index
     @q = Blog.ransack(params[:q])
-    @blogs = @q.result(distinct: true)
+    @blogs = @q.result(distinct: true).order(id: :desc).paginate(:page => params[:page], :per_page => 3)
 
     # @blogs = Blog.all
     @categories = Category.all
@@ -21,7 +21,7 @@ class BlogsController < ApplicationController
     # @category = Category.where(id: params[:category_id]).first
     @category = Category.find(params[:category_id]) 
     @q = @category.blogs.ransack(params[:q])
-    @blogs = @q.result(distinct: true)
+    @blogs = @q.result(distinct: true).paginate(:page => params[:page], :per_page => 3)
   end
 
   def show_tag
@@ -30,7 +30,7 @@ class BlogsController < ApplicationController
     # @tag = Tag.where(id: params[:tag_id]).first
     @tag = Tag.find(params[:tag_id]) 
     @q = @tag.blogs.ransack(params[:q])
-    @blogs = @q.result(distinct: true)
+    @blogs = @q.result(distinct: true).paginate(:page => params[:page], :per_page => 3)
   end
 
   # GET /blogs/new
@@ -40,6 +40,7 @@ class BlogsController < ApplicationController
 
   # GET /blogs/1/edit
   def edit
+    @blog.tags.build
   end
 
   # POST /blogs or /blogs.json
@@ -59,7 +60,7 @@ class BlogsController < ApplicationController
 
   # PATCH/PUT /blogs/1 or /blogs/1.json
   def update
-    if @blog.user_id == current_user.id
+    if (@blog.user_id == current_user.id || current_user.role == "ADMIN")
       respond_to do |format|
         if @blog.update(blog_params)
           format.html { redirect_to blog_url(@blog), notice: "Blog was successfully updated." }

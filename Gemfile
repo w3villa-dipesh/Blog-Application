@@ -59,3 +59,4 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'ransack'
 gem 'font-awesome-rails', '~> 4.7', '>= 4.7.0.2'
+gem 'will_paginate', '~> 3.0'

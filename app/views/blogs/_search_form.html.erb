@@ -1,9 +1,19 @@
 <script type="text/javascript">
-  $(document).ready(function () {
-      $("#btn").click(function () {
-          $("#Create").toggle();
-      });
-  });
+  function like_btn(like_id)
+  {
+    like = like_id.split('_')[1];
+    console.log(like);
+    div_show = "Create_"+like;
+    console.log(div_show);
+    x = document.getElementById(div_show);
+    console.log(x.style.display);
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+
+  }
 </script>
 <style>
   *{
@@ -40,19 +50,67 @@
   .button-circle{
     line-height: 1.7em;
     border-radius: 50px;
+  }
+  .list-group{
+    width: 210px;
+  }
+  .liked{
+    background: transparent;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+  }
+  .h-fit{
+    height: fit-content;
+  }
+  @media (max-width: 986px) {
+    body{
+      background-color: palevioletred;
     }
+    .contain {
+    flex-direction: column;
+    }
+    .recent_post{
+      width: 100%;
+    }
+    .all_blogs{
+      width: 100%;
+    }
+    .category_tags{
+      width: 100%;
+    }
+    .blog-card-body {
+      width: 460px !important;
+    }
+    .tag-card {
+      width: 100% !important;
+    }
+  }
+  @media (max-width: 425px) {
+    .all_blogs{
+      width: 400px;
+    }
+    .blog-card-body {
+      width: 400px !important;
+    }
+    .img-blogs{
+      width: 370px !important;
+    }
+  }
+
 </style>
 <div class="contain">
   <div class = "recent_post">
     <div class="col-md-12">
-      <div class="card w-50 p-3">
+      <div class="card">
         <div class="card-header">
-          <h4>Recent Post</span></h4>
+          <h4>Recent Blogs</span></h4>
         </div>
         <div class="card-body">
           <ul class="list-group">
             <% @blogs.last(3).each do |blog|%>
-              <li class="list-group-item d-flex justify-content-between align-items-center">
+              <li class="list-group-item d-flex align-items-center">
+                <%= image_tag blog.images.first, class:"blog-img" ,width:"40px"%> 
                 <%= link_to blog.title, blog, class:'link'%>
             <%end%>
               </li>
@@ -68,43 +126,84 @@
       <div class="card mb-3 ">
         <div class="img-card col col-md-4 col-sm-12">
           <% if blog.images.present?%>
-            <%= image_tag blog.images.first, class:"blog-img" ,width:"500px"%> 
+            <%= image_tag blog.images.first, class:"blog-img img-blogs" ,width:"500px"%> 
           <%end%>
         </div>
         <div class="card-body blog-card-body">
-          <h5 class="card-title"><%= blog.title %></h5>
-          <p class="card-text"><small>Created by : <%= blog.user.email %>  at : <%= time_ago_in_words(blog.created_at, include_seconds: true) %></small></p>
-          <p class="card-text"><%= blog.body %></p>
-          <p class="lead"><%= link_to 'Read More..', blog, class: "btn btn-primary read-btn"%></p>
-          <% if user_signed_in? && blog.user_id == current_user.id %>
+          <h3 class="card-title font-weight-900"><%= blog.title %></h3>
+          <p class="card-text">
+            <div class="d-flex justify-content-between text-muted">
+              <div>
+                <p><i class="fa fa-user"></i> <%= blog.user.email %></p>
+              </div>            
+              <div>
+                <p><i class="fa fa-calendar"></i> <%= find_date(blog.created_at) %></p>
+              </div>            
+            <div class="text-muted">
+              <p>Category: <%= blog.category.name %></p>
+            </div>
+            </div>
+          </p>
+          <p class="card-text mb-5"><%= blog.body %></p>
+          <hr>
+          <div class="d-flex justify-content-between">
+            <div>
+              <div class="d-flex">
+                <div class="h-fit">
+                  <% like = current_user.likes.find_by(blog: blog) %>
+                  <% if like.nil? %>
+                    <%= button_to likes_path,class:"liked",params:{like:{blog_id: blog.id}},method: :post do %>
+                      <i class="fa-regular fa-heart fa-2x"></i>
+                    <% end %>
+                  <% else %>
+                    <%= button_to like_path(like),class:"liked",method: :delete do %>
+                      <i class="fa-solid fa-heart fa-2x"></i>
+                    <% end %>
+                  <% end %>
+                </div>
+                <div class="px-3 py-1 h-fit">
+                  <input type="button" id="btn_<%= blog.id %>" class="liked" onclick="like_btn(this.id)" value="<%=blog.likes.count%> Likes">
+                </div>
+                <div class="h-fit">
+                  <p class="btn link m-auto py-1 px-3"><i class="fa-solid fa-comments"></i>
+                  <%= blog.comments.count%>
+                  </p>
+                </div>
+              </div>
+              <div id="Create_<%= blog.id %>" style="display:none" class="card text-center">
+                <div class="card-header">
+                  Likes
+                </div>
+                <div class="card-body">
+                  <% blog.likes.each do |l| %>
+                    <p class="card-text"><%= l.user.email %></p>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+            <div>
+              <p class="lead"><%= link_to 'Read More..', blog, class: "btn btn-primary read-btn"%></p>
+            </div>
+          </div>
+
+          <% if user_signed_in? && ((blog.user_id == current_user.id)|| current_user.role=="ADMIN") %>
             <%= link_to 'Edit', edit_blog_path(blog), class: "link" %> | 
             <%= link_to 'Destroy', blog, method: :delete, data: { confirm: 'Are you sure?' }, class: "link" %>
-          <% end %>
-          <div class="card">
-            <div>
-              <input type="button" id="btn" class="btn btn-outline-primary" value="<%=blog.likes.count%> Likes">
-            </div>
-
-            <div id="Create" style="display:none">
-              <% blog.likes.each do |l| %>
-                <p><%= l.user.email %> </p>
-              <% end %>
-            </div>
-            <% like = current_user.likes.find_by(blog: blog) %>
-            <% if like.nil? %>
-              <%= button_to "Like",likes_path,params:{like:{blog_id: blog.id}},method: :post%>
-            <% else %>
-              <%= button_to "Unlike",like_path(like),method: :delete %>
-            <% end %>
-          </div>
-          <div class="card">
-            <p>Total Comments :
-            <%= blog.comments.count%>
-            </p>
-          </div>
+          <% end %>       
         </div>
       </div>
     <% end %>
+    <div class="row margin-twenty5-zero margin-b-zero pagination-row justify-content-between">
+      <div class="col-lg-6 col-md-8 col-sm-7 col-xs-6 padding-zero">
+        <ul class="pagination">
+          <li class="page-item disabled"> <%= will_paginate(@blogs,:previous_label => "&laquo;", :next_label => "&raquo;",:class=>"large-font",:outer_window => 1,:inner_window => 0) %></li>
+        </ul>
+      </div>
+      <div class="col-lg-6 col-md-4 col-sm-5 col-xs-6 pagination-info">
+        <p class="pull-right large-font"><%= page_entries_info(@blogs) %></p>
+      </div>
+    </div>
+    
   </div>
   <div class = "category_tags">
     <%# categories %>

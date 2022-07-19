@@ -2,7 +2,6 @@
   <h1 class="display-4 text-center"><%= @blog.title %></h1>
   <p>
     <strong>Created By:</strong>
-    <%= @blog.user_id %>
     <%= @blog.user.email %>
   </p>
   <p>
@@ -24,25 +23,6 @@
       <%= link_to t.name, show_blogs_tag_path(:tag_id => t.id), class:"badge badge-secondary"%>
     <% end %>
   </p>
-  <br>
-  <div>
-    <input type="button" id="btn" class="btn btn-outline-primary" value="<%=@blog.likes.count%> Likes">
-  </div>
-
-  <div id="Create" style="display:none">
-    <% @blog.likes.each do |l| %>
-      <p><%= l.user.email %> </p>
-    <% end %>
-  </div>
-  <%# like = current_user.likes.find_by(blog: @blog) %>
-  <%# if like.nil? %>
-    <%#= button_to "Like",likes_path,params:{like:{blog_id: @blog.id}},method: :post%>
-  <%# else %>
-    <%#= button_to "Unlike",like_path(like),method: :delete %>
-  <%# end %>
-  <br>
-  <p class="lead"><%= @blog.body%></p>
-  <br>
 
   <p class="lead">
     <% if @blog.images.attached? %>
@@ -53,7 +33,27 @@
       <%= "No Images Attached"%>
     <%end%>
   </p>
+  <br>
+  <p class="lead"><%= @blog.body%></p>
+  <br>
+  <br>
+  <div>
+    <input type="button" id="btn" class="btn btn-outline-primary" value="<%=@blog.likes.count%> Likes">
+  </div>
 
+  <% like = current_user.likes.find_by(blog: @blog) %>
+
+  <div id="Create" style="display:none">
+    <% @blog.likes.each do |l| %>
+      <p><%= l.user.email %> </p>
+    <% end %>
+  </div>
+  
+  <% if like.nil? %>
+    <%= button_to "Like",likes_path,params:{like:{blog_id: @blog.id}},method: :post%>
+  <% else %>
+    <%= button_to "Unlike",like_path(like),method: :delete %>
+  <% end %>
 
   <p>
     <strong>Comments:</strong>
@@ -67,7 +67,8 @@
   <%= link_to "Back", :back,:class => "text-light btn btn-secondary"%>  
   <% if @blog.user_id == current_user.id %>
   <%= link_to "Edit Blog", edit_blog_path(@blog),:class => "text-light btn btn-secondary"%>  
-  <%= link_to "Delete Blog", blogs_path(@blog),:class => "text-light btn btn-danger", data:{method: :delete, confirm: "Are you Sure?"}%>
+
+  <%= link_to "Delete Blog", @blog,:class => "text-light btn btn-danger", data:{method: :delete, confirm: "Are you Sure?"}%>
   <% end %>
 </div>
 
