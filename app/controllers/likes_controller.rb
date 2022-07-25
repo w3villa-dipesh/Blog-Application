@@ -4,7 +4,8 @@ class LikesController < ApplicationController
         if !@like.save
             flash[:notice] = @like.errors.full_messages.to_sentence
         end
-        redirect_to blogs_path
+        redirect_to request.referrer
+        # redirect_to blogs_path
         # redirect_to @like.blog
     end
 
@@ -12,7 +13,8 @@ class LikesController < ApplicationController
         @like = current_user.likes.find(params[:id])
         blog = @like.blog
         @like.destroy
-        redirect_to blogs_path
+        redirect_to request.referrer
+        # redirect_to blogs_path
         # redirect_to blog
     end
 
