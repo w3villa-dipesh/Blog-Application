@@ -3,8 +3,6 @@ class Blog < ApplicationRecord
     validates :title, presence: true, uniqueness: { case_sensitive: true }, length: {maximum: 50, minimum:5}
     validates :body, presence: true, uniqueness: { case_sensitive:  true }, length: { minimum: 10 }
     validate :correct_image_type
-    
-    
 
     belongs_to :user
     belongs_to :category
